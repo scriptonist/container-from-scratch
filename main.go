@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 func main() {
@@ -21,6 +22,10 @@ func run() {
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
+	// Cloning a new hostname aks UnixTimeSharing system(UTS)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags: syscall.CLONE_NEWUTS,
+	}
 
 	must(cmd.Run())
 }
